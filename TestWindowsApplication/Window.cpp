@@ -1,5 +1,6 @@
 #include "Window.h"
 #include <sstream>
+#include "resource.h"
 
 Window::WindowOverhead Window::WindowOverhead::windowOverhead;
 
@@ -14,12 +15,12 @@ Window::WindowOverhead::WindowOverhead() noexcept
 	wndCl.cbClsExtra	=	0;
 	wndCl.cbWndExtra	=	0;
 	wndCl.hInstance		=	GetInstance();
-	wndCl.hIcon			=	nullptr;
+	wndCl.hIcon			=	static_cast<HICON>(LoadImage(GetInstance(), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 32, 32, 0));
 	wndCl.hCursor		=	nullptr;
 	wndCl.hbrBackground	=	nullptr;
 	wndCl.lpszMenuName	=	nullptr;
 	wndCl.lpszClassName	=	GetName();
-	wndCl.hIconSm		=	nullptr;
+	wndCl.hIconSm		=	static_cast<HICON>(LoadImage(GetInstance(), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, 0));
 	RegisterClassEx(&wndCl);
 }
 
