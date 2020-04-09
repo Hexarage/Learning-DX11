@@ -38,7 +38,7 @@ HINSTANCE Window::WindowOverhead::GetInstance() noexcept
 	return windowOverhead.hInstance;
 }
 
-Window::Window(int width, int height, const LPCWSTR name) noexcept
+Window::Window(int width, int height, const LPCWSTR name)
 {
 	//Calculate window size based on desired client region size
 	RECT wr;
@@ -46,11 +46,18 @@ Window::Window(int width, int height, const LPCWSTR name) noexcept
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
+	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE)))
+	{
+		throw CNFXWND_LAST_EXCEPT();
+	}
 
 	// Create window and get hWnd
 	hWnd = CreateWindow(WindowOverhead::GetName(), name, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top, nullptr, nullptr, WindowOverhead::GetInstance(), this);
-
+	
+	if (!hWnd)
+	{
+		throw CNFXWND_LAST_EXCEPT();
+	}
 	// Show Window
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }

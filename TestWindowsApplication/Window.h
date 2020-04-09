@@ -35,7 +35,7 @@ private:
 		HINSTANCE hInstance;
 	};
 public:
-	Window(int width, int height, const LPCWSTR name) noexcept;
+	Window(int width, int height, const LPCWSTR name);
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
@@ -51,3 +51,4 @@ private:
 
 //error exception helper macro, basically helps me not type out __LINE__ and __FILE__ Macros every time I make an exception
 #define CNFXWND_EXCEPT( hr ) Window::Exception(__LINE__, __FILE__, hr)
+#define CNFXWND_LAST_EXCEPT() Window::Exception(__LINE__, __FILE__, GetLastError())
