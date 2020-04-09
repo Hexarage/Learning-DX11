@@ -25,10 +25,14 @@ int CALLBACK WinMain(
 			while (!window.mouse.isEmpty())
 			{
 				const auto e = window.mouse.read();
-				if (e.getType() == Mouse::Event::Type::Move)
+				switch (e.getType())
 				{
+				case Mouse::Event::Type::Leave:
+					window.setTitle("IT'S GONE MATE!");
+					break;
+				case Mouse::Event::Type::Move:
 					std::ostringstream oss;
-					oss << "Mouse Position: (" << e.getPosX() << ", " << e.getPosY() << ")";
+					oss << "Mouse moved to position: (" << e.getPosX() << ", " << e.getPosY() << ")";
 					window.setTitle(oss.str());
 				}
 			}

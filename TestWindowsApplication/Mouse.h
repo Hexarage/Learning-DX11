@@ -17,6 +17,8 @@ public:
 			WheelUp,
 			WheelDown,
 			Move,
+			Enter,
+			Leave,
 			Invalid
 		};
 	private:
@@ -86,6 +88,7 @@ public:
 	std::pair<int, int> getPos() const noexcept;
 	int getPosX() const noexcept;
 	int getPosY() const noexcept;
+	bool isInWindow() const noexcept;
 	bool leftIsPressed() const noexcept;
 	bool rightIsPressed() const noexcept;
 	Mouse::Event read() noexcept;
@@ -98,6 +101,8 @@ public:
 	void flush() noexcept;
 private:
 	void onMouseMove(int x, int y) noexcept;
+	void onMouseLeave() noexcept;
+	void onMouseEnter() noexcept;
 	void onLeftPressed(int x, int y) noexcept;
 	void onLeftReleased(int x, int y) noexcept;
 	void onRightPressed(int x, int y) noexcept;
@@ -111,6 +116,7 @@ private:
 	int y;
 	bool leftIsPressedFlag = false;
 	bool rightIsPressedFlag = false;
+	bool isInWindowFlag = false;
 	std::queue<Event> buffer;
 };
 
