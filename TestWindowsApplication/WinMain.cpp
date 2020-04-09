@@ -3,7 +3,7 @@
 constexpr int width(640), height(480);
 
 int CALLBACK WinMain(
-	HINSTANCE hInstance,		// A handle to the current instance of the application
+	HINSTANCE /*hInstance*/,	// A handle to the current instance of the application
 	HINSTANCE /*hPrevInstance*/,// allways null
 	LPSTR /*lpCmdLine*/,		// command line, single string, not parsed
 	int /*nCmdShow*/			// an instruction on how the window should be shown on program entry
@@ -19,6 +19,10 @@ int CALLBACK WinMain(
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			if (window.keyboard.keyIsPressed(VK_MENU))
+			{
+				MessageBoxA(nullptr, "We pressed the space bar!", "Space key has been pressed.", MB_OK | MB_ICONINFORMATION);
+			}
 		}
 		if (gResult == -1)
 		{

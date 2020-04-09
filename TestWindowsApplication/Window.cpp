@@ -103,6 +103,25 @@ LRESULT Window::HandleMsg(HWND hWndPass, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return 0; // Destroy Window gets called in the destructor of Window, we don't want it called twice by  DefWindowProc
+	case WM_KILLFOCUS: // When the window loses focus, clear the state so we don't have any zombie key presses 
+		keyboard.clearState();
+		break;
+	//------------------------------KEYBOARD MESSAGES HANDLING--------------------------------------//
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:// WM_SYSKEY needs to be handled so that system keys such as ALT (VK_MENU)
+		if (!(lParam & 0x40000000) || keyboard.autorepeatIsEnabled())
+		{
+			keyboard.onKeyPressed(static_cast<unsigned char>(wParam));
+		}
+		break;
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		keyboard.onKeyReleased(static_cast<unsigned char>(wParam));
+		break;
+	case WM_CHAR:
+		keyboard.onChar(static_cast<unsigned char>(wParam));
+		break;
+	//------------------------------END OF KEYBOARD MESSAGES HANDLING-------------------------------//
 	}
 
 	return DefWindowProc(hWndPass, msg, wParam, lParam);

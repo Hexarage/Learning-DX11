@@ -1,6 +1,7 @@
 #pragma once
 #include "WindowsIncludes.h"
 #include "ConfuxException.h"
+#include "Keyboard.h"
 
 // Class for the creation and destruction of a window as well as message handling, maybe separate the functionality
 class Window
@@ -43,6 +44,8 @@ private:
 	static LRESULT WINAPI HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT WINAPI HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+public:
+	Keyboard keyboard;
 private:
 	int width;
 	int height;
