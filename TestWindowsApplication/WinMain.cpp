@@ -10,6 +10,20 @@ LRESULT CALLBACK CustomWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		PostQuitMessage(6);// arbitrary return code
 
 		break;
+	case WM_KEYDOWN:
+		if (wParam == 'A')
+		{
+			SetWindowText(hWnd, L"New Name");
+		}
+
+		break;
+	case WM_KEYUP:
+		if (wParam == 'A')
+		{
+			SetWindowText(hWnd, L"De Windo");
+		}
+
+		break;
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
