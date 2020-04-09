@@ -4,6 +4,8 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 
+#include <optional>
+
 // Class for the creation and destruction of a window as well as message handling, maybe separate the functionality
 class Window
 {
@@ -42,6 +44,7 @@ public:
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 	void setTitle(const std::string newTitle);
+	static std::optional<int> processMessages();
 private:
 	static LRESULT WINAPI HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT WINAPI HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

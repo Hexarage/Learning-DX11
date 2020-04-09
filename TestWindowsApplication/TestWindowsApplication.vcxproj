@@ -154,14 +154,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConfuxException.cpp" />
+    <ClCompile Include="ConfuxTimer.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="LogicHolder.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConfuxException.h" />
+    <ClInclude Include="ConfuxTimer.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="LogicHolder.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Window.h" />
