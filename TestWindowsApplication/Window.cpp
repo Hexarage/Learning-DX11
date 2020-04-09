@@ -126,11 +126,11 @@ const char* Window::Exception::getType() const noexcept
 std::string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 {
 	char* pMsgBuffer = nullptr;
-	DWORD nMsgLength = FormatMessage(
+	DWORD nMsgLength = FormatMessageA(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | // Allocates memory for us
 		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), //MAKELANGID is deprecated TODO: Change to a non deprecated function/alternative
-		reinterpret_cast<LPTSTR>(&pMsgBuffer), 0, nullptr);
+		reinterpret_cast<LPSTR>(&pMsgBuffer), 0, nullptr);
 	if (nMsgLength == 0)
 	{
 		return "Unidentified error code";
