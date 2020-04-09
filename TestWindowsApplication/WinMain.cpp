@@ -28,12 +28,31 @@ int CALLBACK WinMain(
 				switch (e.getType())
 				{
 				case Mouse::Event::Type::Leave:
+				{
 					window.setTitle("IT'S GONE MATE!");
 					break;
+				}
 				case Mouse::Event::Type::Move:
+				{
 					std::ostringstream oss;
 					oss << "Mouse moved to position: (" << e.getPosX() << ", " << e.getPosY() << ")";
 					window.setTitle(oss.str());
+					break;
+				}
+				case Mouse::Event::Type::WheelUp:
+				{
+					std::ostringstream oss;
+					oss << "Wheel Scroll Up";
+					window.setTitle(oss.str());
+					break;
+				}
+				case Mouse::Event::Type::WheelDown:
+				{
+					std::ostringstream oss;
+					oss << "Wheel Scroll Down";
+					window.setTitle(oss.str());
+					break;
+				}
 				}
 			}
 		}

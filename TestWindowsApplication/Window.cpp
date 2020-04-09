@@ -112,26 +112,36 @@ LRESULT Window::HandleMsg(HWND hWndPass, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_CLOSE:
+	{
 		PostQuitMessage(0);
 		return 0; // Destroy Window gets called in the destructor of Window, we don't want it called twice by  DefWindowProc
+	}
 	case WM_KILLFOCUS: // When the window loses focus, clear the state so we don't have any zombie key presses 
+	{
 		keyboard.clearState();
 		break;
-	//------------------------------KEYBOARD MESSAGES HANDLING--------------------------------------//
+	}
+		//------------------------------KEYBOARD MESSAGES HANDLING--------------------------------------//
 	case WM_KEYDOWN:
 	case WM_SYSKEYDOWN:// WM_SYSKEY needs to be handled so that system keys such as ALT (VK_MENU)
+	{
 		if (!(lParam & 0x40000000) || keyboard.autorepeatIsEnabled())
 		{
 			keyboard.onKeyPressed(static_cast<unsigned char>(wParam));
 		}
 		break;
+	}
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
+	{
 		keyboard.onKeyReleased(static_cast<unsigned char>(wParam));
 		break;
+	}
 	case WM_CHAR:
+	{
 		keyboard.onChar(static_cast<unsigned char>(wParam));
 		break;
+	}
 	//------------------------------END OF KEYBOARD MESSAGES HANDLING-------------------------------//
 	//------------------------------MOUSE MESSAGE HANDLING------------------------------------------//
 	case WM_MOUSEMOVE:
@@ -189,14 +199,8 @@ LRESULT Window::HandleMsg(HWND hWndPass, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEWHEEL:
 	{
 		const POINTS point = MAKEPOINTS(lParam);
-		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
-		{
-			mouse.onWheelUp(point.x, point.y);
-		}
-		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
-		{
-			mouse.onWheelDown(point.x, point.y);
-		}
+		const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
+		mouse.onWheelDelta(point.x, point.y, delta);
 		break;
 	}
 	}
