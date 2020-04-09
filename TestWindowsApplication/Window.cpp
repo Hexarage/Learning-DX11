@@ -1,4 +1,5 @@
 #include "Window.h"
+#include <sstream>
 
 Window::WindowOverhead Window::WindowOverhead::windowOverhead;
 
@@ -97,4 +98,54 @@ LRESULT Window::HandleMsg(HWND hWndPass, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 
 	return DefWindowProc(hWndPass, msg, wParam, lParam);
+}
+
+Window::Exception::Exception(int line, const char* file, HRESULT hr) noexcept
+	:
+	ConfuxException(line, file),
+	hr(hr)
+{}
+
+const char* Window::Exception::what() const noexcept
+{
+	std::ostringstream oss;
+
+	oss << getType() << "\n"
+		<< "[ERROR CODE]: " << getErrorCode() << "\n"
+		<< "[DESCRIPTION]: " << getErrorString() << "\n"
+		<< getOriginString();
+	whatBuffer = oss.str();
+	return whatBuffer.c_str();
+}
+
+const char* Window::Exception::getType() const noexcept
+{
+	return "Confux Window Exception"; // TODO: Figure out better name/type
+}
+
+std::string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
+{
+	char* pMsgBuffer = nullptr;
+	DWORD nMsgLength = FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | // Allocates memory for us
+		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), //MAKELANGID is deprecated TODO: Change to a non deprecated function/alternative
+		reinterpret_cast<LPTSTR>(&pMsgBuffer), 0, nullptr);
+	if (nMsgLength == 0)
+	{
+		return "Unidentified error code";
+	}
+	std::string errorString = pMsgBuffer;
+	LocalFree(pMsgBuffer);
+	return errorString;
+}
+
+HRESULT Window::Exception::getErrorCode()const noexcept
+{
+	return hr;
+}
+
+std::string Window::Exception::getErrorString() const noexcept
+{
+	return TranslateErrorCode(hr);
 }

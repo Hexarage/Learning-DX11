@@ -9,20 +9,35 @@ int CALLBACK WinMain(
 	int /*nCmdShow*/			// an instruction on how the window should be shown on program entry
 )
 {
-	Window window(width, height, L"Random Name");
-	Window secondWindow(1200, 400, L"Looooooooooong boi");
-	
-	MSG msg;
-	BOOL gResult;
-	while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0)
+	try
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-	if (gResult == -1)
-	{
-		return -1;
-	}
+		Window window(width, height, L"Random Name");
 
-	return static_cast<int>(msg.wParam);
+		MSG msg;
+		BOOL gResult;
+		while ((gResult = GetMessage(&msg, nullptr, 0, 0)) > 0)
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		if (gResult == -1)
+		{
+			return -1;
+		}
+
+		return static_cast<int>(msg.wParam);
+	}
+	catch (const ConfuxException & e)
+	{
+		MessageBoxA(nullptr, e.what(),"Expected Error",MB_OK | MB_ICONEXCLAMATION);
+	}
+	catch (const std::exception & e)
+	{
+		MessageBoxA(nullptr, e.what(), "Uncaught Error", MB_OK | MB_ICONEXCLAMATION);
+	}
+	catch (...)
+	{
+		MessageBoxA(nullptr, "No details available, unexpected error", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
+	}
+	return -1;
 }

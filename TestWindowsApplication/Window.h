@@ -1,9 +1,23 @@
 #pragma once
 #include "WindowsIncludes.h"
+#include "ConfuxException.h"
 
 // Class for the creation and destruction of a window as well as message handling, maybe separate the functionality
 class Window
 {
+public:
+	class Exception : public ConfuxException
+	{
+	public:
+		Exception(int line, const char* file, HRESULT hr) noexcept;
+		const char* what() const noexcept override;
+		virtual const char* getType() const noexcept override;
+		static std::string TranslateErrorCode(HRESULT hr) noexcept;
+		HRESULT getErrorCode() const noexcept;
+		std::string getErrorString() const noexcept;
+	private:
+		HRESULT hr;
+	};
 private:
 	// Singleton that manages the registration/cleanup of window class
 	class WindowOverhead
@@ -34,3 +48,6 @@ private:
 	int height;
 	HWND hWnd;
 };
+
+//error exception helper macro, basically helps me not type out __LINE__ and __FILE__ Macros every time I make an exception
+#define CNFXWND_EXCEPT( hr ) Window::Exception(__LINE__, __FILE__, hr)
