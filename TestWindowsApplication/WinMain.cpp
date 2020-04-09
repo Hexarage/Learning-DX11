@@ -1,4 +1,5 @@
 #include "Window.h"
+#include <sstream>
 
 constexpr int width(640), height(480);
 
@@ -19,9 +20,17 @@ int CALLBACK WinMain(
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-			if (window.keyboard.keyIsPressed(VK_MENU))
+			
+			// test app logic
+			while (!window.mouse.isEmpty())
 			{
-				MessageBoxA(nullptr, "We pressed the space bar!", "Space key has been pressed.", MB_OK | MB_ICONINFORMATION);
+				const auto e = window.mouse.read();
+				if (e.getType() == Mouse::Event::Type::Move)
+				{
+					std::ostringstream oss;
+					oss << "Mouse Position: (" << e.getPosX() << ", " << e.getPosY() << ")";
+					window.setTitle(oss.str());
+				}
 			}
 		}
 		if (gResult == -1)

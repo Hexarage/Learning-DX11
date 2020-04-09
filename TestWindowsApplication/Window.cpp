@@ -40,6 +40,9 @@ HINSTANCE Window::WindowOverhead::GetInstance() noexcept
 }
 
 Window::Window(int width, int height, const LPCWSTR name)
+	:
+	width(width),
+	height(height)
 {
 	//Calculate window size based on desired client region size
 	RECT wr;
@@ -47,7 +50,7 @@ Window::Window(int width, int height, const LPCWSTR name)
 	wr.right = width + wr.left;
 	wr.top = 100;
 	wr.bottom = height + wr.top;
-	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE)))
+	if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0) // FAILED considers <0 to be a fail state, AdjustWindowRect returns 0 in case of failure
 	{
 		throw CNFXWND_LAST_EXCEPT();
 	}
@@ -66,6 +69,14 @@ Window::Window(int width, int height, const LPCWSTR name)
 Window::~Window()
 {
 	DestroyWindow(hWnd);
+}
+
+void Window::setTitle(const std::string newTitle)
+{
+	if (SetWindowTextA(hWnd, newTitle.c_str()) == 0)
+	{
+		throw CNFXWND_LAST_EXCEPT();
+	}
 }
 
 LRESULT WINAPI Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) // This is only to set up our Window pointer (last parameter given to CreateWindow in Window::Window(...) where hWnd is set)
@@ -122,6 +133,50 @@ LRESULT Window::HandleMsg(HWND hWndPass, UINT msg, WPARAM wParam, LPARAM lParam)
 		keyboard.onChar(static_cast<unsigned char>(wParam));
 		break;
 	//------------------------------END OF KEYBOARD MESSAGES HANDLING-------------------------------//
+	//------------------------------MOUSE MESSAGE HANDLING------------------------------------------//
+	case WM_MOUSEMOVE:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onMouseMove(point.x, point.y);
+		break;
+	}
+	case WM_LBUTTONDOWN:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onLeftPressed(point.x, point.y);
+		break;
+	}
+	case WM_RBUTTONDOWN:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onRightPressed(point.x, point.y);
+		break;
+	}
+	case WM_LBUTTONUP:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onLeftReleased(point.x, point.y);
+		break;
+	}
+	case WM_RBUTTONUP:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		mouse.onRightReleased(point.x, point.y);
+		break;
+	}
+	case WM_MOUSEWHEEL:
+	{
+		const POINTS point = MAKEPOINTS(lParam);
+		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
+		{
+			mouse.onWheelUp(point.x, point.y);
+		}
+		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+		{
+			mouse.onWheelDown(point.x, point.y);
+		}
+		break;
+	}
 	}
 
 	return DefWindowProc(hWndPass, msg, wParam, lParam);
