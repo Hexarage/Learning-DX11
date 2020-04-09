@@ -1,16 +1,20 @@
 #include <windows.h>
+#include <string>
+#include <sstream>
 
 constexpr int xpos(400), ypos(400), width(640), height(480);
 
 LRESULT CALLBACK CustomWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	static std::string title = "";
+
 	switch (msg)
 	{
 	case WM_CLOSE:
 		PostQuitMessage(6);// arbitrary return code
 
 		break;
-	case WM_KEYDOWN:
+	case WM_KEYDOWN: // key input
 		if (wParam == 'A')
 		{
 			SetWindowText(hWnd, L"New Name");
@@ -24,6 +28,18 @@ LRESULT CALLBACK CustomWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 
 		break;
+	case WM_CHAR: // Text input
+		title.push_back(static_cast<char>(wParam));
+		SetWindowTextA(hWnd, title.c_str());
+
+		break;
+	case WM_LBUTTONDOWN:
+		POINTS pt = MAKEPOINTS(lParam);
+		std::ostringstream oss;
+		oss << "( " << pt.x << "," << pt.y << " )";
+		SetWindowTextA(hWnd, oss.str().c_str());
+
+		break;
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
@@ -31,9 +47,9 @@ LRESULT CALLBACK CustomWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 int CALLBACK WinMain(
 	HINSTANCE hInstance,		// A handle to the current instance of the application
-	HINSTANCE hPrevInstance,	// allways null
-	LPSTR lpCmdLine,			// command line, single string, not parsed
-	int nCmdShow				// an instruction on how the window should be shown on program entry
+	HINSTANCE /*hPrevInstance*/,// allways null
+	LPSTR /*lpCmdLine*/,		// command line, single string, not parsed
+	int /*nCmdShow*/			// an instruction on how the window should be shown on program entry
 )
 {
 	// register window class
@@ -79,7 +95,7 @@ int CALLBACK WinMain(
 	BOOL gResult;
 	while ((gResult = GetMessage(&message, nullptr, 0, 0)) > 0)
 	{
-		TranslateMessage(&message);
+		TranslateMessage(&message);							// If the message is WM_KEYDOWN it will generate a WM_CHAR message
 		DispatchMessage(&message);
 	}
 
@@ -89,7 +105,7 @@ int CALLBACK WinMain(
 	}
 	else
 	{
-		return message.wParam;
+		return static_cast<int>(message.wParam);
 	}
 	//int retVal = GetMessage(								// if the message is not WM_QUIT, it will be non zero, WM_Quit is zero and negative is an error
 	//	LPMSG(),											// the message that we get
@@ -98,5 +114,5 @@ int CALLBACK WinMain(
 	//	/**/												// maximum number of messages =//=
 	//	);
 	//while (true);
-	return 0;
+	//return 0;
 }
