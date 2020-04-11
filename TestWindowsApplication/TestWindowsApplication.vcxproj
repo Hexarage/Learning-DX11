@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="ConfuxException.cpp" />
     <ClCompile Include="ConfuxTimer.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="LogicHolder.cpp" />
     <ClCompile Include="Mouse.cpp" />
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="ConfuxException.h" />
     <ClInclude Include="ConfuxTimer.h" />
+    <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="LogicHolder.h" />
     <ClInclude Include="Mouse.h" />

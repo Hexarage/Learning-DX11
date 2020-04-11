@@ -62,8 +62,11 @@ Window::Window(int width, int height, const LPCWSTR name)
 	{
 		throw CNFXWND_LAST_EXCEPT();
 	}
-	// Show Window
+	// newly created windows need to be shown
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
+
+	// Create graphics object
+	ptrGraphics = std::make_unique<Graphics>(hWnd);
 }
 
 Window::~Window()
@@ -97,6 +100,11 @@ std::optional<int> Window::processMessages()
 
 	// Return empty optional when not quitting app
 	return {};
+}
+
+Graphics& Window::graphics()
+{
+	return *ptrGraphics;
 }
 
 LRESULT WINAPI Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) // This is only to set up our Window pointer (last parameter given to CreateWindow in Window::Window(...) where hWnd is set)

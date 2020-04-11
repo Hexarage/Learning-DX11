@@ -3,8 +3,10 @@
 #include "ConfuxException.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "Graphics.h"
 
 #include <optional>
+#include <memory>
 
 // Class for the creation and destruction of a window as well as message handling, maybe separate the functionality
 class Window
@@ -45,6 +47,7 @@ public:
 	Window& operator=(const Window&) = delete;
 	void setTitle(const std::string newTitle);
 	static std::optional<int> processMessages();
+	Graphics& graphics();
 private:
 	static LRESULT WINAPI HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT WINAPI HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -56,6 +59,7 @@ private:
 	int width;
 	int height;
 	HWND hWnd;
+	std::unique_ptr<Graphics> ptrGraphics;
 };
 
 //error exception helper macro, basically helps me not type out __LINE__ and __FILE__ Macros every time I make an exception

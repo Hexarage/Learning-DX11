@@ -1,6 +1,7 @@
 #include "LogicHolder.h"
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 LogicHolder::LogicHolder()
 	:
@@ -33,8 +34,7 @@ int LogicHolder::go()
 
 void LogicHolder::doFrame()
 {
-	const float t = timer.peek();
-	std::ostringstream oss;
-	oss << "Time elapsed: " << std::setprecision(2) << t << "seconds";
-	window.setTitle(oss.str());
+	const float c = sin(timer.peek()) / 2.0f + 0.5f;
+	window.graphics().clearBuffer(c, c, 1.0f-std::max(c/4.0f,0.25f));
+	window.graphics().endFrame();
 }
